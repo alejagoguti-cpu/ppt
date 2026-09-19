@@ -42,8 +42,7 @@ export default function ComparisonChart({ section, type }: ComparisonChartProps)
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" />
             <XAxis
-              dataKey="name"
-              dataKey2="city"
+              dataKey={data[0]?.city ? "city" : "name"}
               stroke="rgba(148, 163, 184, 0.5)"
             />
             <YAxis stroke="rgba(148, 163, 184, 0.5)" />
