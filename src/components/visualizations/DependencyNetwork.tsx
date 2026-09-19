@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ThesisSection } from '@/data/thesis'
 
@@ -8,90 +9,61 @@ interface DependencyNetworkProps {
   type: string
 }
 
-const networkDescriptions: Record<string, {title: string, nodes: string[], connections: string[]}> = {
+// Estado: 0 = normal, 1 = iluminado, 2 = conexiones visibles, 3 = oculto
+const networkData: Record<string, {title: string, nodes: string[], links: Array<[number, number]>}> = {
   'huaqiangbei-network': {
     title: 'Huaqiangbei Hardware Ecosystem',
-    nodes: ['Component Suppliers', 'Designers', 'Manufacturers', 'Integrators', 'Distributors', 'Retailers'],
-    connections: [
-      'Suppliers → Designers (specs)',
-      'Designers → Manufacturers (CAD)',
-      'Manufacturers → Integrators (assembly)',
-      'Integrators → Distributors (logistics)',
-      'Distributors → Retailers (sales)',
-    ]
+    nodes: ['Suppliers', 'Designers', 'Manufacturers', 'Integrators', 'Distributors', 'Retailers'],
+    links: [[0,1], [1,2], [2,3], [3,4], [4,5]]
   },
   'supply-chain-visualization': {
     title: 'Global Electronics Supply Chain',
     nodes: ['Raw Materials', 'Components', 'Assembly', 'Testing', 'Logistics', 'Markets'],
-    connections: [
-      'Materials flow to components',
-      'Components to assembly hubs',
-      'Assembly to testing',
-      'Testing to logistics',
-      'Logistics to markets',
-    ]
+    links: [[0,1], [1,2], [2,3], [3,4], [4,5]]
   },
   'jac-structure': {
     title: 'Grassroots Governance Structure',
-    nodes: ['Residents', 'JACs (Community Orgs)', 'Local Services', 'City Gov', 'Decision-making'],
-    connections: [
-      'Residents organize in JACs',
-      'JACs coordinate local needs',
-      'JACs interface with city government',
-      'Decisions made at community level',
-    ]
+    nodes: ['Residents', 'JACs', 'Services', 'Gov', 'Decisions'],
+    links: [[0,1], [1,2], [1,3], [1,4]]
   },
   'network-centralization': {
-    title: 'Silent Centralization Pattern',
-    nodes: ['Distributed Nodes', 'Data Hub', 'Central Authority', 'Optimization', 'Feedback'],
-    connections: [
-      'Multiple nodes generate data',
-      'Data flows to central hub',
-      'Authority makes decisions',
-      'Optimization rules apply',
-      'Feedback to all nodes',
-    ]
-  },
-  'corabastos-network-before': {
-    title: 'Traditional Market Network',
-    nodes: ['Producers', 'Vendors', 'Traders', 'Consumers', 'Price Discovery'],
-    connections: [
-      'Producers bring goods',
-      'Multiple vendors compete',
-      'Traders add value',
-      'Consumers decide',
-      'Prices emerge from transactions',
-    ]
-  },
-  'market-structure': {
-    title: 'Market Structure & Networks',
-    nodes: ['Supply', 'Distribution', 'Exchange', 'Consumption', 'Feedback'],
-    connections: [
-      'Supply meets distribution',
-      'Exchange at market',
-      'Consumers decide purchases',
-      'Feedback to suppliers',
-    ]
+    title: 'Silent Centralization',
+    nodes: ['Nodes', 'Data', 'Authority', 'Optimization', 'Feedback'],
+    links: [[0,1], [1,2], [2,3], [3,4], [4,0]]
   },
   'data-flow-diagram': {
     title: 'Smart City Data Flow',
-    nodes: ['Sensors', 'Data Collection', 'Central Hub', 'Analysis', 'Decisions', 'Implementation'],
-    connections: [
-      'Sensors collect real-time data',
-      'Data aggregated centrally',
-      'Hub analyzes patterns',
-      'Authority makes decisions',
-      'Systems implement changes',
-    ]
+    nodes: ['Sensors', 'Collection', 'Hub', 'Analysis', 'Decisions', 'Implementation'],
+    links: [[0,1], [1,2], [2,3], [3,4], [4,5]]
   },
 }
 
 export default function DependencyNetwork({ section, type }: DependencyNetworkProps) {
-  const network = networkDescriptions[type] || {
-    title: 'Network Visualization',
-    nodes: ['Node A', 'Node B', 'Node C', 'Node D', 'Node E'],
-    connections: ['A→B', 'B→C', 'C→D', 'D→E'],
+  const [clickState, setClickState] = useState(0) // 0=normal, 1=iluminado, 2=conexiones, 3=oculto
+
+  const network = networkData[type] || {
+    title: 'Network',
+    nodes: ['A', 'B', 'C', 'D'],
+    links: [[0,1], [1,2], [2,3]]
   }
+
+  const toggleState = () => {
+    setClickState((prev) => (prev + 1) % 4)
+  }
+
+  // Generar posiciones circulares para los nodos
+  const getNodePosition = (index: number) => {
+    const angle = (index / network.nodes.length) * Math.PI * 2
+    const radius = 140
+    return {
+      x: 320 + radius * Math.cos(angle),
+      y: 180 + radius * Math.sin(angle),
+    }
+  }
+
+  const isIlluminated = clickState === 1
+  const showConnections = clickState === 2
+  const isHidden = clickState === 3
 
   return (
     <motion.div
@@ -99,41 +71,149 @@ export default function DependencyNetwork({ section, type }: DependencyNetworkPr
       animate={{ opacity: 1 }}
       className="glass p-6 rounded-lg border border-slate-700"
     >
-      <h3 className="font-bold mb-6 text-lg">{network.title}</h3>
-
-      {/* Network diagram placeholder */}
-      <div className="w-full h-64 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-lg border border-slate-700 flex items-center justify-center mb-6 relative overflow-hidden">
-        {/* Animated nodes */}
-        <div className="flex flex-wrap justify-center gap-4 w-full p-4">
-          {network.nodes.map((node, i) => (
-            <motion.div
-              key={i}
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 3 + i * 0.5, repeat: Infinity }}
-              className="px-3 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/50 text-xs font-semibold text-center whitespace-nowrap"
-            >
-              {node}
-            </motion.div>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-bold text-lg">{network.title}</h3>
+        <div className="flex gap-2">
+          {[0, 1, 2, 3].map((state) => (
+            <div
+              key={state}
+              className={`w-2 h-2 rounded-full transition-all ${
+                clickState === state ? 'bg-blue-500 scale-150' : 'bg-slate-600'
+              }`}
+            />
           ))}
         </div>
       </div>
 
-      {/* Connections list */}
-      <div className="space-y-2">
-        <p className="text-sm font-semibold text-slate-300 mb-4">Key Connections:</p>
-        {network.connections.map((conn, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="flex items-center gap-3 text-sm text-slate-400"
-          >
-            <div className="w-2 h-2 rounded-full bg-blue-500" />
-            {conn}
-          </motion.div>
-        ))}
+      {/* Network visualization */}
+      <motion.div
+        onClick={toggleState}
+        className="w-full h-80 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-lg border border-slate-700 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer hover:border-blue-500/50 transition-colors"
+      >
+        <svg className="w-full h-full absolute" viewBox="0 0 640 360">
+          {/* Conexiones SVG */}
+          {!isHidden && showConnections && (
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+              {network.links.map((link, i) => {
+                const from = getNodePosition(link[0])
+                const to = getNodePosition(link[1])
+                return (
+                  <motion.line
+                    key={`line-${i}`}
+                    x1={from.x}
+                    y1={from.y}
+                    x2={to.x}
+                    y2={to.y}
+                    stroke="#3b82f6"
+                    strokeWidth="2"
+                    opacity="0.6"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1, delay: i * 0.1 }}
+                  />
+                )
+              })}
+            </motion.g>
+          )}
+
+          {/* Nodos */}
+          {!isHidden && (
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {network.nodes.map((node, i) => {
+                const pos = getNodePosition(i)
+                return (
+                  <motion.g
+                    key={`node-${i}`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    {/* Glow effect cuando está iluminado */}
+                    {isIlluminated && (
+                      <motion.circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r="32"
+                        fill="#3b82f6"
+                        opacity="0.2"
+                        animate={{ r: [32, 45, 32] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                    )}
+
+                    {/* Node circle */}
+                    <circle
+                      cx={pos.x}
+                      cy={pos.y}
+                      r="24"
+                      fill={isIlluminated ? '#3b82f6' : '#1e293b'}
+                      stroke={isIlluminated ? '#60a5fa' : '#475569'}
+                      strokeWidth="2"
+                    />
+
+                    {/* Node text */}
+                    <text
+                      x={pos.x}
+                      y={pos.y}
+                      textAnchor="middle"
+                      dy="0.3em"
+                      fontSize="11"
+                      fill="#e2e8f0"
+                      className="pointer-events-none font-semibold"
+                    >
+                      {node}
+                    </text>
+                  </motion.g>
+                )
+              })}
+            </motion.g>
+          )}
+        </svg>
+
+        {/* Click hint */}
+        <div className="absolute top-4 left-4 text-xs text-slate-500">
+          {isHidden ? '✓ Oculto - Haz clic para mostrar' : `Estado ${clickState + 1}/4 - Haz clic para cambiar`}
+        </div>
+      </motion.div>
+
+      {/* Estado info */}
+      <div className="space-y-2 text-sm">
+        <p className="font-semibold text-slate-300">
+          {isHidden ? '🔇 Red Oculta' : isIlluminated ? '💡 Nodos Iluminados' : showConnections ? '🔗 Conexiones Visibles' : '👁️ Vista Normal'}
+        </p>
+        <p className="text-slate-500">
+          {isHidden
+            ? 'Haz clic para mostrar la red nuevamente'
+            : isIlluminated
+            ? 'Los nodos están iluminados. Haz clic para ver las conexiones.'
+            : showConnections
+            ? 'Conexiones visibles entre nodos. Haz clic para ocultar.'
+            : 'Haz clic para iluminar los nodos.'}
+        </p>
       </div>
+
+      {/* Conexiones en lista para referencia */}
+      {showConnections && !isHidden && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-4 pt-4 border-t border-slate-700 space-y-2"
+        >
+          <p className="text-xs font-semibold text-slate-300 mb-3">Flujos:</p>
+          {network.links.map((link, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-2 text-xs text-slate-400"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              {network.nodes[link[0]]} → {network.nodes[link[1]]}
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
     </motion.div>
   )
 }
