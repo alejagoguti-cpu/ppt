@@ -49,20 +49,23 @@ export default function Home() {
                 {/* Key aspects grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                   {[
-                    { icon: Globe2, title: 'Two Systems', desc: 'Common Law vs State-Corporate' },
-                    { icon: Map, title: 'Geography', desc: 'One Bay, Different Visions' },
-                    { icon: Zap, title: 'Innovation', desc: 'Competing Innovation Models' },
-                    { icon: BookOpen, title: 'Governance', desc: 'Deep Institutional Analysis' },
+                    { icon: Globe2, title: 'Two Systems', desc: 'Common Law vs State-Corporate', color: 'from-blue-500/20 to-blue-600/20', accent: 'text-blue-400' },
+                    { icon: Map, title: 'Geography', desc: 'One Bay, Different Visions', color: 'from-cyan-500/20 to-cyan-600/20', accent: 'text-cyan-400' },
+                    { icon: Zap, title: 'Innovation', desc: 'Competing Innovation Models', color: 'from-emerald-500/20 to-emerald-600/20', accent: 'text-emerald-400' },
+                    { icon: BookOpen, title: 'Governance', desc: 'Deep Institutional Analysis', color: 'from-violet-500/20 to-violet-600/20', accent: 'text-violet-400' },
                   ].map((item, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      className="glass p-6 rounded-xl hover:border-blue-500/50 transition-all cursor-pointer"
+                      whileHover={{ y: -8 }}
+                      className={`glass p-6 rounded-xl bg-gradient-to-br ${item.color} hover:border-blue-400/50 transition-all cursor-pointer group border border-slate-700 hover:border-blue-400/50`}
                     >
-                      <item.icon className="w-12 h-12 mb-4 text-blue-400" />
-                      <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                      <div className={`w-12 h-12 mb-4 ${item.accent} group-hover:scale-110 transition-transform`}>
+                        <item.icon className="w-12 h-12" />
+                      </div>
+                      <h3 className="text-lg font-bold mb-2 group-hover:text-blue-300 transition-colors">{item.title}</h3>
                       <p className="text-sm text-slate-400">{item.desc}</p>
                     </motion.div>
                   ))}

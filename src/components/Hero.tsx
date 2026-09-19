@@ -11,20 +11,30 @@ export default function Hero({ onExplore }: HeroProps) {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <motion.div
           animate={{
-            y: [0, -20, 0],
+            y: [0, -30, 0],
+            x: [0, 20, 0],
           }}
-          transition={{ duration: 5, repeat: Infinity }}
-          className="absolute top-10 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-10 left-10 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
-            y: [0, 20, 0],
+            y: [0, 30, 0],
+            x: [0, -20, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 7, repeat: Infinity }}
-          className="absolute bottom-10 right-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
         />
       </div>
 

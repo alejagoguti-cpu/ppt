@@ -74,15 +74,75 @@ body {
 
 /* Text gradients */
 .text-gradient {
-  background: linear-gradient(135deg, #3b82f6, #d946ef);
+  background: linear-gradient(135deg, #3b82f6 0%, #d946ef 50%, #06b6d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientShift 6s ease infinite;
+  background-size: 200% 200%;
 }
 
 .text-gradient-reverse {
-  background: linear-gradient(135deg, #d946ef, #3b82f6);
+  background: linear-gradient(135deg, #d946ef 0%, #3b82f6 50%, #10b981 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientShift 6s ease infinite;
+  background-size: 200% 200%;
 }
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Premium glass effect */
+.glass-premium {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient border */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)) padding-box;
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg, #3b82f6, #d946ef) 1;
+}
+
+/* Shimmer effect */
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Neon glow effect */
+.neon-glow {
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5),
+              0 0 20px rgba(217, 70, 239, 0.3),
+              inset 0 0 10px rgba(59, 130, 246, 0.1);
+}
+
+/* Smooth hover effects */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Accent colors */
+.accent-cyan { color: #06b6d4; }
+.accent-emerald { color: #10b981; }
+.accent-violet { color: #a855f7; }
+.accent-rose { color: #f43f5e; }
+
+.bg-accent-cyan { background-color: rgba(6, 182, 212, 0.1); }
+.bg-accent-emerald { background-color: rgba(16, 185, 129, 0.1); }
+.bg-accent-violet { background-color: rgba(168, 85, 247, 0.1); }
+.bg-accent-rose { background-color: rgba(244, 63, 94, 0.1); }
